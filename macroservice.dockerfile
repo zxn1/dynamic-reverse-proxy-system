@@ -45,17 +45,14 @@ RUN apt install -y \
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 # copy and change the .env name
-#COPY setup/.env.example .
-#RUN mv .env.example .env
+COPY setup/microapi.env.example .
+RUN mv microapi.env.example .env
 
 # Install Laravel dependencies
-#RUN composer install --ignore-platform-reqs
+RUN composer install --ignore-platform-reqs
 
 # set www-data permission (for apache2 user)
-#RUN chown -R www-data:www-data /var/www/html/lumen/storage
-
-# Generate application key
-#RUN php artisan key:generate
+RUN chown -R www-data:www-data /var/www/html/lumen/storage
 
 # run the docker ssh tunnel server
 CMD service ssh start && apache2-foreground
