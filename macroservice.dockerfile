@@ -8,7 +8,9 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     unzip \
     openssh-server \
-    netcat
+    netcat \
+    build-essential \
+    libssl-dev
 
 # create privilege separation directory
 RUN mkdir /run/sshd
@@ -53,6 +55,19 @@ RUN composer install --ignore-platform-reqs
 
 # set www-data permission (for apache2 user)
 RUN chown -R www-data:www-data /var/www/html/lumen/storage
+
+# rust cargo setup
+RUN curl https://sh.rustup.rs -sSf | bash -s -- -y
+RUN echo 'source $HOME/.cargo/env' >> $HOME/.bashrc
+
+# Set the environment variables for the current shell session
+ENV PATH="/root/.cargo/bin:${PATH}"
+
+# working directory
+WORKDIR /var/www/html/
+
+# copy cargo file into container
+COPY compose/Cargo/. ./cargo
 
 # run the docker ssh tunnel server
 CMD service ssh start && apache2-foreground

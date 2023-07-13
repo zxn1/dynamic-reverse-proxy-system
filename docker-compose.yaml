@@ -4,7 +4,9 @@ services:
     container_name: macro-api
     ports:
       - "8000:80"
-      - "22:25"
+      - "24:22"
+      - "5000-5100:5000-5100"
+      - "8001-8100:8001-8100"
     build:
       context: ./
       dockerfile: macroservice.dockerfile
